@@ -13,7 +13,7 @@ def ETHUSDT():
         # add timestamp
         data['ts_start'] = int(time.time())
         # get depth data
-        data['raw'] = bn.get_depth(symbol=symbol)
+        data['depth'] = bn.get_depth(symbol=symbol)
         # get kline data
         for i in interval:
             data['kline_'+i] = bn.get_current_kline(symbol=symbol,interval=i)
