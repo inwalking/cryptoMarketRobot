@@ -4,11 +4,15 @@ app_id = 'xKpYPGEr9FR5XQIxd51IHi9Q-gzGzoHsz'
 app_key = 'DCqkxJdi260n1ik8vTM0U75l'
 
 
-def lc_depth():
+def connection():
     leancloud.init(app_id, app_key)
-    C = leancloud.Object.extend('Depth')
-    obj = C()
-    return obj
+    Todo = leancloud.Object.extend('Todo')
+    todo = Todo()
+    todo.set('title', '工程师周会')
+    todo.set('content', '每周工程师会议，周一下午2点')
+    todo.set('location', '会议室')  # 增加一个字段
+    todo.save()
+    return
 
 
 def save_to_cloud(tableName='ETHUSDT', dataObj=None):
@@ -27,6 +31,7 @@ def save_to_cloud(tableName='ETHUSDT', dataObj=None):
 
 
 def main():
+    connection()
     return
 
 

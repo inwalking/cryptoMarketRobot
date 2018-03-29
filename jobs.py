@@ -1,6 +1,7 @@
 import api_leancloud as lc
 import api_binance as bn
 from datetime import datetime
+import time
 
 
 def ETHUSDT():
@@ -10,19 +11,20 @@ def ETHUSDT():
     data = {}
     try:
         # add timestamp
-        data['ts_start'] = datetime.now()
+        data['ts_start'] = int(time.time())
         # get depth data
         data['raw'] = bn.get_depth(symbol=symbol)
         # get kline data
         for i in interval:
             data['kline_'+i] = bn.get_current_kline(symbol=symbol,interval=i)
         # add finish timestamp & calculate time span
-        data['ts_finish'] = datetime.now()
+        data['ts_finish'] = int(time.time())
         data['ts_span'] = data['ts_finish'] - data['ts_start']
         # save data to leanCloud
         lc.save_to_cloud(tableName=symbol, dataObj=data)
         print('%s %s data uploaded' % (datetime.now(), symbol))
-    except:
+    except Exception as e:
+        print(e)
         print('%s %s data upload failed' % (datetime.now(), symbol))
         pass
     return
