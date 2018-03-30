@@ -49,8 +49,8 @@ def get_current_kline(symbol='ETHUSDT', interval='1m', limit=100):
 
 
 def main():
-    # get_depth()
-    a = get_current_kline()
+    a = get_depth(limit=1000)
+    # a = get_current_kline()
     print()
     return
 

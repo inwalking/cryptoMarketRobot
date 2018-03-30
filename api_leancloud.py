@@ -1,4 +1,5 @@
 import leancloud
+import time
 
 app_id = 'xKpYPGEr9FR5XQIxd51IHi9Q-gzGzoHsz'
 app_key = 'DCqkxJdi260n1ik8vTM0U75l'
@@ -30,8 +31,43 @@ def save_to_cloud(tableName='ETHUSDT', dataObj=None):
     return
 
 
+def fetch_from_cloud(tableName='ETHUSDT', itemNum=100, timeEnd=int(time.time()), interval=60):
+    """
+    :param tableName: cloud table name
+    :param itemNum: total number of fetched items
+    :param timeEnd: fetch the item before limitTime
+    :param interval: timestamp intervals of each item
+    :return: leanCloud obj list
+    """
+    queryLimit = 20
+    timeHock = timeEnd
+    remainNum = itemNum
+
+    leancloud.init(app_id, app_key)
+    T = leancloud.Object.extend(tableName)
+    q1 = T.query
+    q2 = T.query
+    query = T.query
+    query.limit(queryLimit)
+
+    result = []
+    while remainNum > 0:
+        if remainNum < queryLimit:
+            queryLimit = remainNum
+        q1.greater_than_or_equal_to('ts_finish', timeHock - queryLimit * interval)
+        q2.less_than('ts_finish', timeHock)
+        query = leancloud.Query.and_(q1, q2)
+        result += query.find()  # fetch data
+        timeHock -= queryLimit * interval
+        remainNum -= queryLimit
+        print('Fetching Data: %s / %s' % (itemNum - remainNum, itemNum))
+
+    return result
+
+
 def main():
     connection()
+    a = fetch_from_cloud()
     return
 
 
